@@ -13,8 +13,8 @@
                 <h4 class="card-title mb-0">Bidders</h4>
             </div>
             <div class="card-body">
-                <table class="table table-bordered w-100">
-                    <thead>
+                <table class="table table-bordered w-100 align-middle">
+                    <thead class="table-light">
                         <tr>
                             <th>#</th>
                             <th>Name</th>
@@ -26,14 +26,32 @@
                         @foreach ($bidders as $bidder)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $bidder['name'] }}</td>
+                            <td>
+                                {{ $bidder['name'] }}
+                                @if ($winnerId === $bidder['user_id'])
+                                    <span class="badge bg-success ms-2">Winner</span>
+                                @endif
+                            </td>
                             <td>${{ number_format($bidder['top_bid'], 2) }}</td>
                             <td>
-                                <button class="btn btn-primary view-bid"
-                                        data-user="{{ $bidder['user_id'] }}"
-                                        data-product="{{ $product->id }}">
-                                    View Bids
-                                </button>
+                                <div class="d-flex flex-column flex-md-row gap-2">
+                                    <button class="btn btn-sm btn-primary view-bid"
+                                            data-user="{{ $bidder['user_id'] }}"
+                                            data-product="{{ $product->id }}">
+                                        View Bids
+                                    </button>
+
+                                    @if ($winnerId === $bidder['user_id'] && auth()->id() === $bidder['user_id'])
+                                        @if ($paymentCompleted)
+                                            <button class="btn btn-sm btn-success" disabled>Paid</button>
+                                        @else
+                                            <a href="{{ route('checkout', ['product' => $product->id]) }}"
+                                               class="btn btn-sm btn-success">
+                                                Pay Now
+                                            </a>
+                                        @endif
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -54,7 +72,7 @@
             </div>
             <div class="modal-body">
                 <table class="table table-bordered w-100">
-                    <thead>
+                    <thead class="table-light">
                         <tr>
                             <th>#</th>
                             <th>Bidded Amount</th>

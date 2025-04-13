@@ -1,16 +1,112 @@
-.message {
-    padding: 7px;
+
+:root {
+    --msger-bg: #fff;
+    --border: 2px solid #ddd;
+    --left-msg-bg: #ececec;
+    --right-msg-bg: #579ffb;
+}
+
+body {
+    background-image: var(--body-bg);
+}
+
+.msger {
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    height: 100vh;
+    margin: 2rem auto;
+    border: var(--border);
     border-radius: 5px;
-    margin-bottom: 7px;
+    background: var(--msger-bg);
+    box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
+}
+
+.msger-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom: var(--border);
+    background: #eee;
+    color: #333;
+}
+
+.msger-chat {
+    flex: 1;
+    padding: 20px;
+    background-color: #fcfcfe;
+
+    /* Scrollbar hidden */
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE/Edge */
+}
+.msger-chat::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.msger-inputarea {
+    display: flex;
+    padding: 10px;
+    border-top: var(--border);
+    background: #eee;
+}
+
+.msger-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: #ddd;
+    font-size: 1em;
+}
+
+.msger-send-btn {
+    margin-left: 10px;
+    background: rgb(0, 196, 65);
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+}
+.msger-send-btn:hover {
+    background: rgb(0, 180, 50);
+}
+
+.message {
+    display: inline-block;
+    max-width: 75%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    line-height: 1.4;
+    position: relative;
+    word-break: break-word;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .text-left {
-    text-align: left;
-    background-color: #f1f1f1;
+    background-color: #ffffff;
+    color: #333;
+    border-top-left-radius: 0;
+    align-self: flex-start;
+    margin-right: auto;
 }
 
 .text-right {
-    text-align: right;
-    background-color: #dbdbdb;
-    color: #080808;
+    background-color: #d1f0e1;
+    color: #000;
+    border-top-right-radius: 0;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.message small {
+    display: block;
+    font-size: 12px;
+    margin-top: 6px;
+    color: #888;
 }

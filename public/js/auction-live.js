@@ -1,4 +1,3 @@
-
 const countdownIntervals = {};
 const authUserId = document.querySelector('[data-auth-user-id]').dataset.authUserId;
 
@@ -86,13 +85,26 @@ $(document).ready(function () {
     channel.bind('App\\Events\\LiveAuction', function (data) {
         const bid = data.bid;
         const productId = bid.product_id;
+        const previousBidder = data.previous_highest_bidder;
+        const previousBidAmount = data.previous_bid_amount;
 
+        // Update current price in UI
         $('#current-price-' + productId).text('$' + parseFloat(bid.amount).toFixed(2));
 
-        if (data.previous_highest_bidder === parseInt(authUserId)) {
-            Swal.fire('Outbid', `You’ve been outbid on: ${data.product_name}`, 'warning');
+        // Outbid alert (only if current user was previous highest AND not the one who placed this bid)
+        if (
+            previousBidder &&
+            previousBidder === parseInt(authUserId) &&
+            bid.user_id !== parseInt(authUserId)
+        ) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Outbid!',
+                html: `You’ve been outbid on <strong>${data.product_name}</strong>.<br>Your previous bid was <strong>$${parseFloat(previousBidAmount).toFixed(2)}</strong>.`,
+            });
         }
 
+        // Restart countdown if time extended
         if (data.new_end_time) {
             clearInterval(countdownIntervals[productId]);
             startCountdown(productId, data.new_end_time);

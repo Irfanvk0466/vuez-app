@@ -4,7 +4,10 @@ use App\Http\Controllers\Admin\BidderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +26,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/chat/{bidderId}', [ChatController::class, 'show'])->name('chat-show');
     Route::get('/chat', [ChatController::class, 'showAdminMessage'])->name('chat-showForBidder');
     Route::post('send-message', [ChatController::class, 'sendMessage'])->name('send-message');
+
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::get('/checkout/{product}', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/{product}/pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
+    Route::get('/checkout/{product}/success', [CheckoutController::class, 'success'])->name('checkout.success');
+
 });
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/products', ProductController::class);

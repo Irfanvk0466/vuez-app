@@ -11,45 +11,46 @@
 <meta name="receiver-id" content="{{ $adminId ?? $bidderId }}">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<div class="container mt-5">
-    <h2>
-        @if(auth()->user()->isAdmin())
-            Chat With Bidder: {{ $bidder->name }}
-        @else
-            Chat With Admin
-        @endif
-    </h2>
+<section class="msger">
+    <header class="msger-header">
+        <div class="msger-header-title">
+            <i class="fas fa-comment-alt"></i>
+            @if(auth()->user()->isAdmin())
+                Chat with Bidder: {{ $bidder->name }}
+            @else
+                Chat with Admin
+            @endif
+        </div>
+        <div class="msger-header-options">
+            <span><i class="fas fa-cog"></i></span>
+        </div>
+    </header>
 
-    <div id="chat-box" style="max-height: 400px; overflow-y: auto;">
-        <div id="messages">
+    <main class="msger-chat" id="chat-box">
+        <div id="messages" class="d-flex flex-column">
             @foreach ($messages as $message)
-                <div>
-                    @if ($message->sender_id == auth()->id())
-                        <div class="message text-right">
-                            <strong>You:</strong> {{ $message->message }}<br>
-                            <small class="text-muted">{{ $message->created_at->format('h:i A') }}</small>
-                        </div>
-                    @else
-                        <div class="message text-left">
-                            <strong>{{ $message->sender->name }}:</strong> {{ $message->message }}<br>
-                            <small class="text-muted">{{ $message->created_at->format('h:i A') }}</small>
-                        </div>
-                    @endif
+                @php $isOwn = $message->sender_id == auth()->id(); @endphp
+                <div class="d-flex {{ $isOwn ? 'justify-content-end' : 'justify-content-start' }}">
+                    <div class="message {{ $isOwn ? 'text-right' : 'text-left' }}">
+                        @unless($isOwn)
+                            <strong>{{ $message->sender->name }}</strong><br>
+                        @endunless
+                        {{ $message->message }}
+                        <small>{{ $message->created_at->format('h:i A') }}</small>
+                    </div>
                 </div>
             @endforeach
         </div>
-    </div>
+    </main>
 
-    <form method="POST" id="sendMessage" action="{{ route('send-message') }}" class="mt-3">
+    <form method="POST" id="sendMessage" action="{{ route('send-message') }}" class="msger-inputarea">
         @csrf
-        <textarea id="message-input" class="form-control" placeholder="Type your message..." rows="3"></textarea>
-        <div class="d-flex justify-content-end mt-2 me-2">
-            <button type="submit" class="btn btn-success btn-rounded d-flex align-items-center">
-                <i class="ri-send-plane-fill me-2"></i> Send
-            </button>
-        </div>
+        <input id="message-input" type="text" class="msger-input" placeholder="Enter your message..." />
+        <button type="submit" class="msger-send-btn">
+            <i class="ri-send-plane-fill me-1"></i>Send
+        </button>
     </form>
-</div>
+</section>
 @endsection
 
 @section('script')

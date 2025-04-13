@@ -6,7 +6,6 @@ use App\Events\MessageSent;
 use App\Http\Requests\messageRequest;
 use App\Models\Chat;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
@@ -31,8 +30,8 @@ class ChatController extends Controller
     {
         $bidder = User::findOrFail($bidderId);
         $messages = Chat::with('sender')
-            ->whereIn('sender_id', [auth()->id(), $bidder->id])
-            ->whereIn('receiver_id', [auth()->id(), $bidder->id])
+            ->whereIn('sender_id', [Auth::id(), $bidder->id])
+            ->whereIn('receiver_id', [Auth::id(), $bidder->id])
             ->oldest()
             ->get();
         return view('chat.index', compact('messages', 'bidder', 'bidderId'));
@@ -46,8 +45,8 @@ class ChatController extends Controller
     {
         $admin = User::where('role', 'admin')->firstOrFail();
         $messages = Chat::with('sender')
-            ->whereIn('sender_id', [auth()->id(), $admin->id])
-            ->whereIn('receiver_id', [auth()->id(), $admin->id])
+            ->whereIn('sender_id', [Auth::id(), $admin->id])
+            ->whereIn('receiver_id', [Auth::id(), $admin->id])
             ->oldest()
             ->get();
         return view('chat.index', [
@@ -64,7 +63,7 @@ class ChatController extends Controller
     public function sendMessage(messageRequest $request)
     {
         $chat = Chat::create([
-            'sender_id' => auth()->id(),
+            'sender_id' => Auth::id(),
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
         ]);

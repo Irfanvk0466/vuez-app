@@ -15,6 +15,10 @@ class Product extends Model
         'end_time',
     ];
 
+    protected $casts = [
+        'end_time' => 'datetime',
+    ];
+
     /**
      * Get all images for the product.
      */

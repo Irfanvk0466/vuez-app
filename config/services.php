@@ -38,5 +38,10 @@ return [
    'youtube' => [
         'stream_url' => env('YOUTUBE_STREAM_URL'),
     ],
+    
+    'razorpay' => [
+    'key'    => env('RAZORPAY_KEY'),
+    'secret' => env('RAZORPAY_SECRET'),
+],
 
 ];

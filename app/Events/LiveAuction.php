@@ -20,7 +20,7 @@ class LiveAuction implements ShouldBroadcast
 
     public function __construct(Bid $bid, $previousHighestBidderId)
     {
-        $bid = $bid->fresh()->load('product');
+        $bid = $bid->fresh(['product']); 
 
         $this->bid = [
             'amount' => $bid->amount,
@@ -29,7 +29,7 @@ class LiveAuction implements ShouldBroadcast
         ];
         $this->previousHighestBidderId = $previousHighestBidderId;
         $this->productName = $bid->product->name;
-        $this->newEndTime = \Carbon\Carbon::parse($bid->product->end_time)->toDateTimeString();
+        $this->newEndTime = $bid->product->end_time->toDateTimeString();
     }
 
     public function broadcastOn()

@@ -15,13 +15,14 @@ $(function () {
             minute: '2-digit'
         });
 
-        const isMe = data.chat.sender_id == authId;
+        const isMe = String(data.chat.sender_id) === String(authId); // ✅ fixed
 
         const messageHtml = `
-            <div>
+            <div class="d-flex ${isMe ? 'justify-content-end' : 'justify-content-start'}">
                 <div class="message ${isMe ? 'text-right' : 'text-left'}">
-                    <strong>${isMe ? 'You' : data.sender_name}:</strong> ${data.chat.message}
-                    <br><small class="text-muted">${time}</small>
+                    ${!isMe ? `<strong>${data.sender_name}</strong><br>` : ''}
+                    ${data.chat.message}
+                    <small>${time}</small>
                 </div>
             </div>`;
         
@@ -41,13 +42,16 @@ $(function () {
             minute: '2-digit'
         });
 
-        $('#messages').append(`
-            <div>
+        // Append immediately as right-side
+        const messageHtml = `
+            <div class="d-flex justify-content-end">
                 <div class="message text-right">
                     <strong>You:</strong> ${message}
-                    <br><small class="text-muted">${formattedTime}</small>
+                    <small>${formattedTime}</small>
                 </div>
-            </div>`);
+            </div>`;
+        
+        $('#messages').append(messageHtml);
         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
         $('#message-input').val('');
 

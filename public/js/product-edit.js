@@ -16,8 +16,12 @@ $(document).ready(function () {
                     $('#edit_name').val(p.name);
                     $('#edit_price').val(p.starting_price);
                     $('#edit_description').val(p.description);
-                    $('#edit_end_time').val(p.end_time.replace(' ', 'T'));
 
+                    const DateTime = luxon.DateTime;
+                    const endTime = DateTime.fromISO(p.end_time, { zone: 'Asia/Kolkata' })
+                        .toFormat("yyyy-MM-dd'T'HH:mm");
+
+                    $('#edit_end_time').val(endTime);
                     $('#editProductForm').attr('action', `/products/${p.id}`);
 
                     const $imageContainer = $('#existing-images');

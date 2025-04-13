@@ -14,7 +14,7 @@ class DashBoardController extends Controller
      */
     public function index()
     {
-        $products = Product::with(relations: 'images')->latest()->get();
+        $products = Product::with(relations: 'images')->latest()->paginate(6);
         return view('dashboard',compact('products'));
     }
 }

@@ -8,8 +8,9 @@
 @section('content')
 <div class="container" data-auth-user-id="{{ auth()->id() }}">
     <h2>Live Auctions</h2>
+
     @if(Auth::user()->isBidder())
-        <!-- <div class="text-center mb-4">
+        <div class="text-center mb-4">
             <h4>Watch Live Auction</h4>
             <iframe 
                 width="100%" 
@@ -19,7 +20,7 @@
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowfullscreen>
             </iframe>
-        </div> -->
+        </div>
     @endif
 
     @if($products->isEmpty())
@@ -54,6 +55,11 @@
             </script>
             @endforeach
         </div>
+
+        {{-- Pagination --}}
+        <div class="mt-4 d-flex justify-content-center">
+            {{ $products->links() }}
+        </div>
     @endif
 </div>
 
@@ -69,4 +75,3 @@
 </script>
 <script src="{{ asset('js/auction-live.js') }}"></script>
 @endsection
-
