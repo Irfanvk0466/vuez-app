@@ -21,7 +21,6 @@ class LiveAuction implements ShouldBroadcast
     public function __construct(Bid $bid, $previousHighestBidderId)
     {
         $bid = $bid->fresh(['product']); 
-
         $this->bid = [
             'amount' => $bid->amount,
             'product_id' => $bid->product_id,

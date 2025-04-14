@@ -102,3 +102,11 @@
     color: #d3cece;
     margin-right: 5px;
 }
+.text-center.mt-4 {
+    margin-top: 2rem;
+}
+.btn-primary {
+    font-weight: 500;
+    border-radius: 6px;
+}
+

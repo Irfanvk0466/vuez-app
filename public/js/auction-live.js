@@ -82,12 +82,16 @@ $(document).ready(function () {
     const channel = pusher.subscribe('bids');
 
     channel.bind('App\\Events\\LiveAuction', function (data) {
+        console.log(data);
         const bid = data.bid;
         const productId = bid.product_id;
         const previousBidder = data.previous_highest_bidder;
         const previousBidAmount = data.previous_bid_amount;
-
+    
+        // Update current price
         $('#current-price-' + productId).text('$' + parseFloat(bid.amount).toFixed(2));
+    
+        // Show outbid alert to previous bidder
         if (
             previousBidder &&
             previousBidder === parseInt(authUserId) &&
@@ -99,11 +103,20 @@ $(document).ready(function () {
                 html: `You’ve been outbid on <strong>${data.product_name}</strong>.<br>Your previous bid was <strong>$${parseFloat(previousBidAmount).toFixed(2)}</strong>.`,
             });
         }
-
-        // Restart countdown if time extended
+    
+        // Restart countdown and show +2 extension UI if time extended
         if (data.new_end_time) {
             clearInterval(countdownIntervals[productId]);
             startCountdown(productId, data.new_end_time);
+    
+            const notice = document.getElementById(`extend-notice-${productId}`);
+            if (notice) {
+                notice.style.display = 'block';
+                setTimeout(() => {
+                    notice.style.display = 'none';
+                }, 2500); // Match animation duration
+            }
         }
     });
+    
 });

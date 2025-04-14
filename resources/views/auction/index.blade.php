@@ -28,12 +28,16 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>
                                 {{ $bidder['name'] }}
+
                                 @if ($winnerId === $bidder['user_id'])
                                     <span class="badge bg-success ms-2">Winner</span>
-                                    @if ($paymentCompleted)
-                                        <span class="badge bg-info ms-1">Paid</span>
-                                    @else
-                                        <span class="badge bg-warning text-dark ms-1">Unpaid</span>
+
+                                    @if (Auth::user()->isAdmin())
+                                        @if ($paymentCompleted)
+                                            <span class="badge bg-info ms-1">Paid</span>
+                                        @else
+                                            <span class="badge bg-warning text-dark ms-1">Unpaid</span>
+                                        @endif
                                     @endif
                                 @endif
                             </td>
@@ -66,28 +70,7 @@
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="bidModal" tabindex="-1" aria-labelledby="bidModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Bid History</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered w-100">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Bidded Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bidTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+@include('components.bid-history-modal')
 @endsection
 
 @section('script')

@@ -2,13 +2,11 @@
 @section('title') Live Auctions @endsection
 
 @section('css')
-<link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('css/auction.css') }}" rel="stylesheet" />
 @endsection
-
 @section('content')
 <div class="container" data-auth-user-id="{{ auth()->id() }}">
     <h2>Live Auctions</h2>
-
     @if(Auth::user()->isBidder())
         <div class="text-center mb-4">
             <h4>Watch Live Auction</h4>
@@ -28,10 +26,11 @@
     @else
         <div class="row">
             @foreach($products as $product)
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4 position-relative">
+                <div id="extend-notice-{{ $product->id }}" class="time-extend-indicator" style="display: none;">+2</div>
                 <div class="card">
                     <img src="{{ $product->images->first() ? asset('storage/' . $product->images->first()->image_path) : asset('assets/images/default.png') }}"
-                         class="card-img-top" style="height: 200px; object-fit: cover;" alt="Product Image">
+                        class="card-img-top" style="height: 200px; object-fit: cover;" alt="Product Image">
 
                     <div class="card-body">
                         <h5 class="card-title">{{ $product->name }}</h5>
@@ -48,6 +47,7 @@
                     </div>
                 </div>
             </div>
+
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     startCountdown({{ $product->id }}, "{{ $product->end_time }}");
@@ -55,17 +55,14 @@
             </script>
             @endforeach
         </div>
-
         {{-- Pagination --}}
         <div class="mt-4 d-flex justify-content-center">
             {{ $products->links() }}
         </div>
     @endif
 </div>
-
 @include('admin.products.bid')
 @endsection
-
 @section('script')
 <script>
     window.PUSHER_APP_KEY = "{{ env('PUSHER_APP_KEY') }}";

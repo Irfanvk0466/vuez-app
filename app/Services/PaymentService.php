@@ -71,7 +71,7 @@ class PaymentService
             'amount'          => $amount * 100,
             'currency'        => 'INR',
             'payment_capture' => 1,
-        ]);
+        ])->toArray();
     }
     /**
      * Store a new payment record in the database.

@@ -13,7 +13,6 @@
         margin: 30px auto;
         box-shadow: 0 0 20px rgba(0,0,0,0.2);
     }
-
     .room {
         width: 50%;
         background: url({{ $product->images->first() ? asset('storage/' . $product->images->first()->image_path) : asset('assets/images/default.png') }}) no-repeat center center;
@@ -28,22 +27,18 @@
         background: rgba(0, 0, 0, 0.7);
         padding: 20px;
     }
-
     .text-cover h1 {
         font-size: 1.8rem;
         margin-bottom: 10px;
     }
-
     .text-cover .price {
         color: #e67e22;
         margin-bottom: 10px;
     }
-
     .text-cover .price span {
         font-size: 1.4rem;
         font-weight: 700;
     }
-
     .payment {
         width: 50%;
         color: #34495e;
@@ -51,15 +46,12 @@
         flex-direction: column;
         justify-content: space-between;
     }
-
     .receipt-box, .payment-info {
         padding: 20px;
     }
-
     .receipt-box {
         border-bottom: 1px solid #ccc;
     }
-
     input[type="text"] {
         width: 100%;
         padding: 10px;
@@ -68,16 +60,13 @@
         border-radius: 4px;
         background: #f9f9f9;
     }
-
     .table {
         width: 100%;
     }
-
     .table td {
         font-size: 0.9rem;
         padding: 5px 0;
     }
-
     .table td:last-child {
         text-align: right;
     }
@@ -119,13 +108,11 @@
 @push('scripts')
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     const button = document.getElementById('rzp-button1');
     const orderId = "{{ $order['order_id'] }}";
-    
     button.addEventListener("click", function (e) {
         e.preventDefault();
-
         const handlePaymentSuccess = (response) => {
             fetch(`/checkout/order/${orderId}/pay`, {
                 method: "POST",
@@ -147,8 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Payment success, but could not store. Contact support.");
             });
         };
-
-        // Step 2: Open Razorpay Checkout
         fetch(`/checkout/order/${orderId}/pay`, {
             method: "POST",
             headers: {
@@ -163,7 +148,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Failed to initiate payment.");
                 return;
             }
-
             const options = {
                 key: "{{ config('services.razorpay.key') }}",
                 amount: data.amount,
@@ -182,7 +166,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     color: "#0ab39c"
                 }
             };
-
             const rzp = new Razorpay(options);
             rzp.open();
         })
