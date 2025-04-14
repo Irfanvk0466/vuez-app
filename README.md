@@ -71,6 +71,7 @@ Cannot place the same bid amount again.
 A user must wait at least 5 seconds between bids.
 When auction ends, bid button is disabled.
 If a bid is placed when end time < 2 minutes, the time is automatically extended by 2 minutes.
+there +2 icon provided additionaly extension see for users.
 
 Auction Result
 When the auction ends, the user with the highest bid is marked as the Winner.
