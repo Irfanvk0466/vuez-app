@@ -8,10 +8,16 @@ use Illuminate\Support\Facades\Storage;
 class ImageService
 {
     /**
-     * Sync product images:
-     * - Delete removed images
-     * - Keep selected images
-     * - Upload new ones
+     * Handle product image synchronization.
+     *
+     * - Deletes images that were removed from the UI
+     * - Keeps images that are still selected
+     * - Uploads and stores newly added images
+     *
+     * @param \App\Models\Product $product
+     * @param array $existingImageIds
+     * @param array $newImages
+     * @return void
      */
     public function handleImage(Product $product, array $existingImageIds = [], array $newImages = []): void
     {

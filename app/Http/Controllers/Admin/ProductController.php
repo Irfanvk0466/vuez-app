@@ -26,7 +26,6 @@ class ProductController extends Controller
         $products = Product::with(relations: 'images')->latest()->paginate(6);
         return view('admin.products.index', compact('products'));
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -57,7 +56,6 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
-    
     /**
      * Display the specified resource.
      */
@@ -65,7 +63,6 @@ class ProductController extends Controller
     {
         //
     }
-
     /**
      * Return product details with images for editing via AJAX.
      *

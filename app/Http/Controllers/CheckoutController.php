@@ -16,7 +16,6 @@ class CheckoutController extends Controller
     {
         $this->paymentService = $paymentService;
     }
-
     /**
      * Initiates Razorpay order creation and redirects to the secure checkout page using order_id.
      *
@@ -25,20 +24,13 @@ class CheckoutController extends Controller
      */
     public function index(Product $product)
     {
-        $topBid = $product->bids()
-            ->where('user_id', Auth::id())
-            ->orderByDesc('amount')
-            ->first();
-
+        $topBid = $product->bids()->where('user_id', Auth::id())->orderByDesc('amount')->first();
         if (!$topBid || $topBid->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-
         $order = $this->paymentService->createOrder(request(), $product);
-
         return redirect()->route('checkout', ['order' => $order['order_id']]);
     }
-
     /**
      * Displays the checkout view using the secure order_id.
      *
@@ -47,19 +39,9 @@ class CheckoutController extends Controller
      */
     public function show($orderId)
     {
-        $payment = Payment::where('order_id', $orderId)
-            ->where('user_id', Auth::id())
-            ->where('status', 'pending')
-            ->with('product')
-            ->firstOrFail();
-
+        $payment = Payment::where('order_id', $orderId)->where('user_id', Auth::id())->where('status', 'pending')->with('product')->firstOrFail();
         $product = $payment->product;
-
-        $topBid = $product->bids()
-            ->where('user_id', Auth::id())
-            ->orderByDesc('amount')
-            ->first();
-
+        $topBid = $product->bids()->where('user_id', Auth::id())->orderByDesc('amount')->first();
         return view('checkout.index', [
             'product' => $product,
             'topBid' => $topBid,
@@ -71,7 +53,6 @@ class CheckoutController extends Controller
             ]
         ]);
     }
-
     /**
      * Used only for Razorpay client verification after payment (no database update).
      *
@@ -81,15 +62,10 @@ class CheckoutController extends Controller
      */
     public function pay(Request $request, $orderId)
     {
-        $payment = Payment::where('order_id', $orderId)
-            ->where('user_id', Auth::id())
-            ->where('status', 'pending')
-            ->first();
-
+        $payment = Payment::where('order_id', $orderId)->where('user_id', Auth::id())->where('status', 'pending')->first();
         if (!$payment) {
             return response()->json(['error' => 'Payment record not found.'], 404);
         }
-
         return response()->json([
             'message' => 'Payment verification successful.',
             'order_id' => $orderId,
@@ -97,7 +73,6 @@ class CheckoutController extends Controller
             'currency' => $payment->currency
         ]);
     }
-
     /**
      * Finalizes the payment and updates the order record after successful Razorpay confirmation.
      *
@@ -108,22 +83,15 @@ class CheckoutController extends Controller
     public function success(Request $request, $orderId)
     {
         $paymentId = $request->query('payment_id', 'unknown');
-
-        $payment = Payment::where('order_id', $orderId)
-            ->where('user_id', Auth::id())
-            ->where('status', 'pending')
-            ->first();
-
+        $payment = Payment::where('order_id', $orderId)->where('user_id', Auth::id())->where('status', 'pending')->first();
         if ($payment && empty($payment->payment_id)) {
             $payment->update([
                 'payment_id' => $paymentId,
                 'status' => 'completed',
             ]);
         }
-
         return redirect()->route('order.confirmation', ['payment_id' => $paymentId]);
     }
-
     /**
      * Displays the payment confirmation page after a successful transaction.
      *
@@ -136,7 +104,6 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->with('product')
             ->firstOrFail();
-
         return view('checkout.confirmation', [
             'product_name' => $payment->product->name ?? 'N/A',
             'amount' => $payment->amount,

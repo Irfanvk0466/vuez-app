@@ -9,14 +9,19 @@ use Illuminate\Support\Facades\Auth;
 class NotificationController extends Controller
 {
     /**
-     * Fetch latest unread notifications.
+     * Fetch the latest unread notifications for the authenticated user (used in topbar).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function fetchTopbarNotifications()
     {
         return Notification::where('user_id', Auth::id())->where('read', false)->latest()->take(5)->get();
     }
     /**
-     * Mark notification as read.
+     * Mark a specific notification as read for the authenticated user.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function markAsRead($id)
     {
