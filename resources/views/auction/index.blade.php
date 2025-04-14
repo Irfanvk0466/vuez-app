@@ -30,9 +30,14 @@
                                 {{ $bidder['name'] }}
                                 @if ($winnerId === $bidder['user_id'])
                                     <span class="badge bg-success ms-2">Winner</span>
+                                    @if ($paymentCompleted)
+                                        <span class="badge bg-info ms-1">Paid</span>
+                                    @else
+                                        <span class="badge bg-warning text-dark ms-1">Unpaid</span>
+                                    @endif
                                 @endif
                             </td>
-                            <td>${{ number_format($bidder['top_bid'], 2) }}</td>
+                            <td>₹{{ number_format($bidder['top_bid'], 2) }}</td>
                             <td>
                                 <div class="d-flex flex-column flex-md-row gap-2">
                                     <button class="btn btn-sm btn-primary view-bid"
@@ -45,8 +50,7 @@
                                         @if ($paymentCompleted)
                                             <button class="btn btn-sm btn-success" disabled>Paid</button>
                                         @else
-                                            <a href="{{ route('checkout', ['product' => $product->id]) }}"
-                                               class="btn btn-sm btn-success">
+                                            <a href="{{ route('checkout.initiate', ['product' => $product->id]) }}" class="btn btn-sm btn-success">
                                                 Pay Now
                                             </a>
                                         @endif

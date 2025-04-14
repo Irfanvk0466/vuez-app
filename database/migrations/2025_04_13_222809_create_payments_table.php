@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->string('payment_id');
+            $table->string('payment_id')->nullable();
             $table->decimal('amount', 10, 2);
+            $table->string('order_id')->unique();
+            $table->string('currency')->default('INR');
             $table->enum('status', ['pending', 'failed', 'completed'])->default('pending');
             $table->timestamps();
         });

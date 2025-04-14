@@ -72,7 +72,6 @@ $(document).ready(function () {
         });
     });
 
-    // Pusher initialization
     Pusher.logToConsole = false;
 
     const pusher = new Pusher(window.PUSHER_APP_KEY, {
@@ -88,10 +87,7 @@ $(document).ready(function () {
         const previousBidder = data.previous_highest_bidder;
         const previousBidAmount = data.previous_bid_amount;
 
-        // Update current price in UI
         $('#current-price-' + productId).text('$' + parseFloat(bid.amount).toFixed(2));
-
-        // Outbid alert (only if current user was previous highest AND not the one who placed this bid)
         if (
             previousBidder &&
             previousBidder === parseInt(authUserId) &&
