@@ -1,66 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Live Auction Application Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Project Setup Instructions
+1. Install Laravel 11
+    composer create-project laravel/laravel live-auction
+2)PHP Version: 8.2.26
+3)Composer: Installed
+4)Node.js/NPM: Installed
 
-## About Laravel
+Install Laravel Breeze (for Auth scaffolding)
+composer require laravel/breeze --dev
+php artisan breeze:install
+npm install && npm run dev
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Set Up the Project:
+php artisan migrate
+php artisan db:seed  # Seeds admin credentials
+php artisan serve
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Admin Panel Features
+Admin login with seeded credentials.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Admin Panel Features
+Admin login with seeded credentials.
 
-## Learning Laravel
+Admin can:
+Create, view, edit, and delete products.
+Upload multiple images per product.
+View all products in dashboard.
+View bid history and user details.
+See auction winners and payment status.
+Engage in real-time chat with bidders using Pusher.
+Real-time chat is integrated using Pusher.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Pusher Configuration
+Install Pusher PHP SDK:
+composer require pusher/pusher-php-server
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+.env
+BROADCAST_DRIVER=pusher
+PUSHER_APP_ID="your-pusher-app-id"
+PUSHER_APP_KEY="your-pusher-key"
+PUSHER_APP_SECRET="your-pusher-secret"
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME="https"
+PUSHER_APP_CLUSTER="ap2"
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Add to config/broadcasting.php:
+Make sure the pusher connection is correctly configured.
 
-## Laravel Sponsors
+Queue Configuration (for broadcasting with ShouldBroadcast)
+php artisan queue:work
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+.env
+QUEUE_CONNECTION=database
 
-### Premium Partners
+Bidder Panel Features
+Can view available live auction products.
+Real-time live stream video support.
+Real-time chat with admin via Pusher.
+Real-time bid updates and notifications.
+Notification icon shows live notifications when outbid.
+"Show Bidders" button reveals all bidders and their bid history.
+Bid button disabled when auction ends.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Bidding Logic & Validations
+A bid must be greater than the current price.
+Cannot place the same bid amount again.
+A user must wait at least 5 seconds between bids.
+When auction ends, bid button is disabled.
+If a bid is placed when end time < 2 minutes, the time is automatically extended by 2 minutes.
 
-## Contributing
+Auction Result
+When the auction ends, the user with the highest bid is marked as the Winner.
+The Winner badge is shown to both the admin and all users.
+Only the winner sees the "Pay Now" button to complete payment via Razorpay.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Payment Integration (Razorpay)
+Setup Razorpay:
+composer require razorpay/razorpay
 
-## Code of Conduct
+Add to .env or config/services.php:
+RAZORPAY_KEY=your_key
+RAZORPAY_SECRET=your_secret
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Flow:
+Only the winner can click "Pay Now".
+Clicking "Pay Now" generates a unique order ID using Razorpay.
+User is redirected to Razorpay's test gateway.
+On successful payment:
+Redirect to confirmation screen.
+"Pay Now" becomes disabled.
+Badge "Paid" appears.
+If not paid, badge shows "Unpaid" in both admin and user view.
 
-## Security Vulnerabilities
+Security:
+Only the order ID is passed via URL (not product ID).
+Payment option is only available after auction ends.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Final Notes
+Ensure Pusher credentials and cluster are correct.
+Run php artisan queue:work for real-time broadcasting if not using ShouldBroadcastNow.
+Use Razorpay test credentials for development mode.
+All real-time updates (bids, notifications, chat) work via Pusher.
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
