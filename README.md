@@ -17,7 +17,7 @@ php artisan migrate
 php artisan db:seed  # Seeds admin credentials
 php artisan serve
 
-Admin Panel Features
+Admin Panel Features : 
 Admin login with seeded credentials.
 
 Admin Panel Features
