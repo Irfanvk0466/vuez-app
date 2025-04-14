@@ -61,6 +61,7 @@ Real-time live stream video support.
 Real-time chat with admin via Pusher.
 Real-time bid updates and notifications.
 Notification icon shows live notifications when outbid.
+notifications can be deleted.
 "Show Bidders" button reveals all bidders and their bid history.
 Bid button disabled when auction ends.
 
@@ -76,6 +77,7 @@ When the auction ends, the user with the highest bid is marked as the Winner.
 The Winner badge is shown to both the admin and all users.
 Only the winner sees the "Pay Now" button to complete payment via Razorpay.
 
+additional features
 Payment Integration (Razorpay)
 Setup Razorpay:
 composer require razorpay/razorpay
